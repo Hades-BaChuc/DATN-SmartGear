@@ -59,3 +59,35 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## DATN BookStore – Setup
+
+### Yêu cầu
+- PHP 8.2+, Composer
+- Node 18+/npm
+- MySQL 8+ (hoặc MariaDB tương đương)
+- Laravel 12.x
+
+### Cài đặt nhanh
+```bash
+# Clone
+git clone https://github.com/Hades-BaChuc/DATN-BookStore.git
+cd DATN-BookStore
+
+# Backend
+composer install
+cp .env.example .env
+# → Cập nhật DB_* trong .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+
+# Frontend (nếu dùng Vite cho CSS/JS)
+npm install
+npm run dev   # hoặc npm run build
+
+# Chạy app (tuỳ môi trường)
+php artisan serve   # http://127.0.0.1:8000
+# Hoặc dùng Laragon/Valet
+
