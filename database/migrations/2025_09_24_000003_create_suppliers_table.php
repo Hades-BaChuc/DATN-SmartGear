@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
   public function up(): void {
-    Schema::create('publishers', function (Blueprint $t) {
+    Schema::create('suppliers', function (Blueprint $t) {
       $t->id(); $t->string('name'); $t->string('slug')->unique(); $t->timestamps();
     });
   }
-  public function down(): void { Schema::dropIfExists('publishers'); }
+  public function down(): void { Schema::dropIfExists('suppliers'); }
 };

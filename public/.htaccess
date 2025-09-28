@@ -5,9 +5,9 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # Handle Brandization Header
+    RewriteCond %{HTTP:Brandization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Brandization}]
 
     # Handle X-XSRF-Token Header
     RewriteCond %{HTTP:x-xsrf-token} .

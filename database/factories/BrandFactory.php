@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Author;
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AuthorFactory extends Factory
+class BrandFactory extends Factory
 {
-    protected $model = Author::class; // hoặc dùng PHPDoc @extends trong các phiên bản mới
+    protected $model = Brand::class; // hoặc dùng PHPDoc @extends trong các phiên bản mới
 
     public function definition(): array
     {

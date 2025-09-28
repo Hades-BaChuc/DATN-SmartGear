@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
-use App\Models\Publisher;
+use App\Models\Supplier;
 use Illuminate\Support\Str;
 
-class PublisherSeeder extends Seeder {
+class SupplierSeeder extends Seeder {
   public function run(): void {
     $names = [
       'NXB Trẻ','NXB Kim Đồng','Nhã Nam','Alphabooks',
-      'First News - Trí Việt','Thái Hà Books','NXB Lao Động',
+      'First News - Trí Việt','Thái Hà Products','NXB Lao Động',
       'NXB Tổng Hợp','NXB Phụ Nữ','NXB Hội Nhà Văn'
     ];
     foreach ($names as $n) {
-      Publisher::firstOrCreate(['slug'=>Str::slug($n)], ['name'=>$n]);
+      Supplier::firstOrCreate(['slug'=>Str::slug($n)], ['name'=>$n]);
     }
   }
 }

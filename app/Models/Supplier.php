@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Supplier;
 
-class Publisher extends Model
+class Supplier extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function books(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Product::class);
     }
 }

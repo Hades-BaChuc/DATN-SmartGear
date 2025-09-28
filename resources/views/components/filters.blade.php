@@ -8,15 +8,15 @@
   </div>
 
   <select class="form-select" name="author">
-    <option value="">-- Tác giả --</option>
-    @foreach($authors as $a)
+    <option value="">-- Thương hiệu --</option>
+    @foreach($brands as $a)
       <option value="{{ $a->id }}" @selected(request('author')==$a->id)>{{ $a->name }}</option>
     @endforeach
   </select>
 
   <select class="form-select" name="publisher">
-    <option value="">-- Nhà xuất bản --</option>
-    @foreach($publishers as $p)
+    <option value="">-- Nhà cung cấp --</option>
+    @foreach($suppliers as $p)
       <option value="{{ $p->id }}" @selected(request('publisher')==$p->id)>{{ $p->name }}</option>
     @endforeach
   </select>

@@ -9,5 +9,5 @@ class Category extends Model {
   protected $fillable = ['name','slug','parent_id'];
   public function parent(){ return $this->belongsTo(Category::class,'parent_id'); }
   public function children(){ return $this->hasMany(Category::class,'parent_id'); }
-  public function books(){ return $this->belongsToMany(Book::class,'book_category'); }
+  public function products(){ return $this->belongsToMany(Product::class,'book_category'); }
 }
