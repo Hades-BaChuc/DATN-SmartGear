@@ -1,32 +1,25 @@
 <?php
 
+// database/migrations/2025_09_24_000006_create_pivots.php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
-        // BẢO HIỂM: nếu còn bảng cũ thì xoá trước khi tạo lại
-        Schema::dropIfExists('book_author');
-        Schema::dropIfExists('book_category');
-
-        Schema::create('book_category', function (Blueprint $t) {
-            $t->engine = 'InnoDB';
-            $t->foreignId('book_id')->constrained()->cascadeOnDelete();
-            $t->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $t->primary(['book_id','category_id']);
-        });
-
-        Schema::create('book_author', function (Blueprint $t) {
-            $t->engine = 'InnoDB';
-            $t->foreignId('book_id')->constrained()->cascadeOnDelete();
-            $t->foreignId('author_id')->constrained()->cascadeOnDelete();
-            $t->primary(['book_id','author_id']);
+    public function up(): void
+    {
+        Schema::create('book_category', function (Blueprint $table) {
+            $table->engine = 'InnoDB';              // phòng khi engine mặc định không phải InnoDB
+            $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('category_id');
+            $table->primary(['book_id','category_id']);
+            // TẠM THỜI: không add ->foreign() ở đây
+            $table->timestamps();
         });
     }
 
-    public function down(): void {
-        Schema::dropIfExists('book_author');
+    public function down(): void
+    {
         Schema::dropIfExists('book_category');
     }
 };

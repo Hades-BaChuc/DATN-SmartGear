@@ -6,22 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('title');
+
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->string('isbn')->nullable()->unique();
+            $table->string('sku')->nullable()->unique();
+
             $table->unsignedInteger('price');
             $table->unsignedTinyInteger('discount_percent')->default(0);
             $table->unsignedInteger('stock')->default(0);
-            $table->string('format')->nullable();
-            $table->string('language', 32)->default('vi');
-            $table->unsignedInteger('pages')->nullable();
-            $table->unsignedInteger('weight')->nullable();
-            $table->string('size')->nullable();
-            $table->year('publish_year')->nullable();
-            $table->foreignId('publisher_id')->nullable()->constrained()->nullOnDelete();
+
+            // --- các field công nghệ ---
+            $table->string('model')->nullable();
+            $table->year('release_year')->nullable();
+            $table->unsignedInteger('warranty_months')->nullable();
+
+            // --- FK đúng cú pháp ---
+            $table->foreignId('brand_id')->nullable()->constrained('brands')->nullOnDelete();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+
             $table->text('description')->nullable();
             $table->string('cover_image')->nullable();
             $table->enum('status', ['draft','active','hidden'])->default('active');
@@ -30,6 +36,6 @@ return new class extends Migration {
     }
 
     public function down(): void {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('products');
     }
 };

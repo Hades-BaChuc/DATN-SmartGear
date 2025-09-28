@@ -1,10 +1,10 @@
 <?php
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
-use App\Models\Author;
+use App\Models\Brand;
 
-class AuthorSeeder extends Seeder {
+class BrandSeeder extends Seeder {
   public function run(): void {
-    Author::factory()->count(60)->create();
+    Brand::factory()->count(60)->create();
   }
 }

@@ -10,7 +10,7 @@ return new class extends Migration {
             $t->engine = 'InnoDB';
             $t->id();
             $t->foreignId('cart_id')->constrained('carts')->cascadeOnDelete();
-            $t->foreignId('book_id')->constrained('books')->cascadeOnDelete(); // nếu bạn cần
+            $t->foreignId('book_id')->constrained('products')->cascadeOnDelete(); // nếu bạn cần
             $t->unsignedInteger('qty')->default(1);
             $t->unsignedInteger('price')->nullable(); // nếu tính giá tại thời điểm thêm
             $t->timestamps();

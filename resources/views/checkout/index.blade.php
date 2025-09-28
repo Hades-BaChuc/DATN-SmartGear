@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Thanh toán')
+@section('name','Thanh toán')
 @section('content')
 <div class="row g-4">
 <section class="col-lg-8">

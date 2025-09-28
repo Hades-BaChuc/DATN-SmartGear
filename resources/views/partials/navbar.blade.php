@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
 <div class="container">
-<a class="navbar-brand fw-bold" href="/">Bookshop</a>
+<a class="navbar-brand fw-bold" href="/">Productshop</a>
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"><span class="navbar-toggler-icon"></span></button>
 <div class="collapse navbar-collapse" id="topNav">
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
-<li class="nav-item"><a class="nav-link" href="/books">Sách</a></li>
+<li class="nav-item"><a class="nav-link" href="/products">Sản phẩm</a></li>
 </ul>
-<form class="d-flex me-3" role="search" action="/books" method="get">
+<form class="d-flex me-3" role="search" action="/products" method="get">
 <input class="form-control" type="search" name="q" placeholder="Tìm sách, tác giả…" value="{{ request('q') }}">
 </form>
 @php($cartCount = $cartCount ?? (session('cart_count') ?? 0))
