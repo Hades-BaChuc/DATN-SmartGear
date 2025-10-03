@@ -1,42 +1,44 @@
 @extends('layouts.app')
-@section('name', $book['name'] ?? 'Chi tiết sách')
+
+@section('name', $product->name)
 @section('content')
-@php($book = $book ?? [
-'id'=>1,'name'=>'Dune','author'=>'Frank Herbert','price'=>189000,
-'cover'=>'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&auto=format&fit=crop',
-'description'=>'Mô tả sách demo. Nội dung đang cập nhật…'
-])
-<nav aria-label="breadcrumb" class="mb-3">
-<ol class="breadcrumb">
-<li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-<li class="breadcrumb-item"><a href="/products">Sản phẩm</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ $book['name'] }}</li>
-</ol>
-</nav>
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Sản phẩm</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+    </ol>
+  </nav>
 
+  <div class="row g-4">
+    <div class="col-md-5">
+      <img class="img-fluid rounded border book-cover"
+           src="{{ $product->cover_image ?? 'https://picsum.photos/600/800?random='.$product->id }}"
+           alt="{{ $product->name }}">
+    </div>
+    <div class="col-md-7">
+      <h1 class="h3">{{ $product->name }}</h1>
+      <div class="text-muted mb-2">
+        Thương hiệu: {{ optional($product->brand)->name ?? '—' }} ·
+        Danh mục: {{ optional($product->category)->name ?? '—' }}
+      </div>
 
-<div class="row g-4">
-<div class="col-md-5">
-<img class="img-fluid rounded border" src="{{ $book['cover'] }}" alt="{{ $book['name'] }}">
-</div>
-<div class="col-md-7">
-<h1 class="h3">{{ $book['name'] }}</h1>
-<div class="text-muted mb-2">{{ $book['author'] }}</div>
-<div class="h4 fw-bold mb-3">{{ number_format($book['price'],0,',','.') }} ₫</div>
-<p class="text-muted">{{ $book['description'] }}</p>
+      <div class="fs-4 fw-semibold text-danger mb-3">
+        {{ number_format($product->price, 0, ',', '.') }}₫
+        @if($product->discount_percent) <small class="text-muted">(-{{ $product->discount_percent }}%)</small> @endif
+      </div>
 
+      <p class="mb-3">{{ $product->description }}</p>
 
-<form class="vstack gap-3" action="#" method="post">
-<div class="input-group w-auto" data-qty-wrap>
-<button class="btn btn-outline-secondary" type="button" data-step="dec"><i class="bi bi-dash"></i></button>
-<input type="number" class="form-control text-center" style="max-width:80px" name="qty" value="1" min="1">
-<button class="btn btn-outline-secondary" type="button" data-step="inc"><i class="bi bi-plus"></i></button>
-</div>
-<div class="d-flex gap-2">
-<button type="button" class="btn btn-dark"><i class="bi bi-cart me-1"></i> Thêm vào giỏ</button>
-<a href="/cart" class="btn btn-outline-secondary">Xem giỏ hàng</a>
-</div>
-</form>
-</div>
+      <ul class="list-unstyled small text-muted mb-4">
+        <li>Mã: {{ $product->sku ?? '—' }}</li>
+        <li>Mẫu: {{ $product->model ?? '—' }}</li>
+        <li>Năm: {{ $product->release_year ?? '—' }}</li>
+        <li>Bảo hành: {{ $product->warranty_months ? $product->warranty_months.' tháng' : '—' }}</li>
+      </ul>
+
+      <button class="btn btn-primary"><i class="bi bi-cart-plus me-1"></i> Thêm vào giỏ</button>
+    </div>
+  </div>
 </div>
 @endsection

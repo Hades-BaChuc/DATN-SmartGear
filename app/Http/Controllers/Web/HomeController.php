@@ -1,18 +1,41 @@
 <?php
 
 namespace App\Http\Controllers\Web;
-use App\Http\Controllers\Controller;
-use App\Models\{Product,Category};
 
-class HomeController extends Controller {
-  public function index() {
-    $categories = Category::whereNull('parent_id')->with('children')->orderBy('name')->get();
-    $newProducts   = Product::with('publisher')->orderByDesc('id')->limit(12)->get();
-    $bestDeals  = Product::orderByDesc('discount_percent')->limit(12)->get();
-    $banners = [
-      'https://placehold.co/1200x350?text=Banner+1',
-      'https://placehold.co/1200x350?text=Banner+2'
-    ];
-    return view('home', compact('categories','newProducts','bestDeals','banners'));
-  }
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Category;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        // 4 danh mục chính theo slug (hoặc fallback bằng tên)
+        $slugs = [
+            'dien-thoai' => 'Điện thoại',
+            'laptop'     => 'Laptop',
+            'ban-phim'   => 'Bàn phím',
+            'chuot'      => 'Chuột',
+        ];
+
+        $categories = collect();
+        foreach ($slugs as $slug => $fallbackName) {
+            $cat = Category::where('slug', $slug)->first()
+                ?? Category::where('name', 'like', $fallbackName.'%')->first();
+            if ($cat) $categories->push($cat);
+        }
+
+        // sản phẩm nổi bật (random/hoặc latest)
+        $featured = Product::with('brand')->latest('id')->take(8)->get();
+
+        // gợi ý theo từng danh mục, nếu có
+        $byCategory = [];
+        foreach ($categories as $cat) {
+            $byCategory[$cat->slug] = Product::with('brand')
+                ->where('category_id', $cat->id)
+                ->latest('id')->take(8)->get();
+        }
+
+        return view('home', compact('categories', 'featured', 'byCategory'));
+    }
 }

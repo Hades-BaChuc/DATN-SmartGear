@@ -4,25 +4,30 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    // GET /products
+    public function index()
     {
-        $q = Product::query()->with(['brand','supplier','category']);
+        $query = Product::with(['brand', 'category'])->latest('id');
 
-        if ($request->filled('category')) $q->where('category_id', $request->integer('category'));
-        if ($request->filled('brand'))    $q->where('brand_id', $request->integer('brand'));
-        if ($request->filled('q'))        $q->where('name', 'like', '%'.$request->q.'%');
+        if ($cid = request('category')) {
+            $query->where('category_id', $cid);
+        }
 
-        $products = $q->latest()->paginate(12);
+        $products = $query->paginate(12);
 
-        return view('products.index', compact('products'));
+        return view('products.index', [
+            'products' => $products,
+            'total'    => $products->total(),
+        ]);
     }
 
-    public function show(Product $product)
+    // GET /products/{id}
+    public function show(int $id)
     {
+        $product = Product::with(['brand', 'supplier', 'category'])->findOrFail($id);
         return view('products.show', compact('product'));
     }
 }
