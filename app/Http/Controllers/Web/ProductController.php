@@ -4,30 +4,38 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    // GET /products
-    public function index()
+    public function index(Request $request)
     {
-        $query = Product::with(['brand', 'category'])->latest('id');
+        $q     = $request->string('q');
+        $brand = $request->string('brand');
+        $sort  = $request->string('sort');
 
-        if ($cid = request('category')) {
-            $query->where('category_id', $cid);
+        $query = Product::query();
+
+        if ($q->isNotEmpty()) {
+            $query->where('name', 'like', '%'.$q.'%');
+        }
+        if ($brand->isNotEmpty()) {
+            $query->where('brand', $brand);
         }
 
-        $products = $query->paginate(12);
+        // sort: popular | price-asc | price-desc | new
+        $query->when($sort === 'price-asc', fn($q) => $q->orderBy('price'))
+              ->when($sort === 'price-desc', fn($q) => $q->orderByDesc('price'))
+              ->when($sort === 'new', fn($q) => $q->latest('id'));
 
-        return view('products.index', [
-            'products' => $products,
-            'total'    => $products->total(),
-        ]);
+        $products = $query->paginate(12)->withQueryString();
+
+        return view('products.index', compact('products'));
     }
 
-    // GET /products/{id}
     public function show(int $id)
     {
-        $product = Product::with(['brand', 'supplier', 'category'])->findOrFail($id);
+        $product = Product::findOrFail($id);
         return view('products.show', compact('product'));
     }
 }

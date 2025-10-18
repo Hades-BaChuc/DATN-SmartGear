@@ -10,33 +10,44 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cart = session('cart', []); // [product_id => ['product' => Product, 'qty' => int, 'price' => int]]
-        $total = collect($cart)->sum(fn($row) => $row['qty'] * $row['price']);
+        $cart = session('cart', []); // [id => qty]
+        $ids  = array_keys($cart);
 
-        return view('cart.index', compact('cart', 'total'));
+        $items = [];
+        if ($ids) {
+            $products = Product::whereIn('id', $ids)->get()->keyBy('id');
+            foreach ($cart as $id => $qty) {
+                if (!isset($products[$id])) continue;
+                $p = $products[$id];
+                $items[] = [
+                    'id'    => $p->id,
+                    'name'  => $p->name,
+                    'img'   => $p->image ?? '/images/placeholder.jpg',
+                    'price' => (int) $p->price,
+                    'qty'   => (int) $qty,
+                    'attrs' => $p->tags ?? '',
+                ];
+            }
+        }
+
+        return view('cart.index', compact('items'));
     }
 
     public function add(Request $request)
     {
-        $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'qty' => 'nullable|integer|min:1',
+        $data = $request->validate([
+            'id'  => 'required|integer|exists:products,id',
+            'qty' => 'nullable|integer|min:1|max:99',
         ]);
-        $qty = max(1, (int) $request->input('qty', 1));
-
-        $product = Product::findOrFail($request->product_id);
+        $qty = $data['qty'] ?? 1;
 
         $cart = session('cart', []);
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['qty'] += $qty;
-        } else {
-            $cart[$product->id] = [
-                'product' => $product,
-                'qty'     => $qty,
-                'price'   => $product->price,
-            ];
-        }
-        session(['cart' => $cart]);
+        $cart[$data['id']] = ($cart[$data['id']] ?? 0) + $qty;
+
+        session([
+            'cart'       => $cart,
+            'cart_count' => array_sum($cart), // dùng cho badge ở navbar
+        ]);
 
         return back()->with('success', 'Đã thêm vào giỏ.');
     }
@@ -45,14 +56,16 @@ class CartController extends Controller
     {
         $cart = session('cart', []);
         unset($cart[$id]);
-        session(['cart' => $cart]);
-
-        return back()->with('success', 'Đã xoá khỏi giỏ.');
+        session([
+            'cart'       => $cart,
+            'cart_count' => array_sum($cart),
+        ]);
+        return back()->with('success', 'Đã xoá sản phẩm khỏi giỏ.');
     }
 
     public function clear()
     {
-        session()->forget('cart');
+        session()->forget(['cart','cart_count']);
         return back()->with('success', 'Đã làm trống giỏ hàng.');
     }
 }

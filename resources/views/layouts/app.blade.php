@@ -37,29 +37,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- App JS: qty stepper + navbar shadow -->
-  <script>
-    (function () {
-      // qty stepper
-      document.addEventListener('click', function (e) {
-        const btn = e.target.closest('[data-step]');
-        if (!btn) return;
-        const wrap = btn.closest('[data-qty-wrap]');
-        const input = wrap?.querySelector('input[type="number"]');
-        if (!input) return;
-        const step = btn.dataset.step === 'inc' ? 1 : -1;
-        const min = parseInt(input.min || 1, 10);
-        const max = parseInt(input.max || 999, 10);
-        let val = parseInt(input.value || 1, 10) + step;
-        input.value = Math.min(Math.max(val, min), max);
-        input.dispatchEvent(new Event('change'));
-      });
-
-      // navbar shadow on scroll
-      const nav = document.querySelector('nav.navbar');
-      const onScroll = () => nav && nav.classList.toggle('scrolled', window.scrollY > 2);
-      onScroll(); window.addEventListener('scroll', onScroll);
-    })();
-  </script>
+  <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}" defer></script>
 
   @stack('scripts')
 </body>

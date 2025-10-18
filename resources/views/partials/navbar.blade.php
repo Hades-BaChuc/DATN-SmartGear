@@ -8,7 +8,7 @@
       Productshop
     </a>
 
-    {{-- Nút Danh mục + Mega dropdown --}}
+{{-- Danh mục + Mega dropdown (5 mục) --}}
 <div class="dropdown position-static d-none d-lg-block">
   <button class="btn btn-menu dropdown-toggle d-inline-flex align-items-center gap-2"
           data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
@@ -16,72 +16,230 @@
     <span class="fw-semibold">Danh mục</span>
   </button>
 
-  <div class="dropdown-menu dropdown-mega p-3 mt-2">
+  <div class="dropdown-menu dropdown-mega p-0 mt-2">
     <div class="container-xl">
-      <div class="cat-grid">
+      <div class="mega-wrap">
+        {{-- LEFT: danh mục --}}
+        <ul class="mega-left list-unstyled m-0">
+          <li class="mega-item active" data-target="#panel-laptop">
+              <i class="bi bi-laptop"></i>
+                <a href="{{ route('laptop.index') }}" class="text-reset text-decoration-none">Laptop</a>
+              <i class="bi bi-chevron-right ms-auto"></i>
+          </li>
+          <li class="mega-item" data-target="#panel-monitor">
+            <i class="bi bi-display"></i><span>Màn hình</span><i class="bi bi-chevron-right ms-auto"></i>
+          </li>
+          <li class="mega-item" data-target="#panel-phone">
+            <i class="bi bi-phone"></i><span>Điện thoại</span><i class="bi bi-chevron-right ms-auto"></i>
+          </li>
+          <li class="mega-item" data-target="#panel-mouse">
+            <i class="bi bi-mouse"></i><span>Chuột + Lót chuột</span><i class="bi bi-chevron-right ms-auto"></i>
+          </li>
+          <li class="mega-item" data-target="#panel-headset">
+            <i class="bi bi-headphones"></i><span>Tai nghe</span><i class="bi bi-chevron-right ms-auto"></i>
+          </li>
+        </ul>
 
-        {{-- Ví dụ item (có thể loop @foreach $categories as $cat) --}}
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-laptop"></i> Laptop</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-pc-display"></i> Laptop Gaming</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-pc"></i> PC GVN</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-cpu"></i> Main, CPU, VGA</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-hdd"></i> Case, Nguồn, Tản</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-device-hdd"></i> Ổ cứng, RAM, Thẻ nhớ</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-mic"></i> Loa, Micro, Webcam</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-display"></i> Màn hình</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-keyboard"></i> Bàn phím</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-mouse"></i> Chuột + Lót chuột</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-headphones"></i> Tai nghe</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-controller"></i> Handheld, Console</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-usb-c"></i> Phụ kiện (Hub, sạc…)</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
-        <a href="#" class="cat-item">
-          <span class="left"><i class="bi bi-bag-check"></i> Dịch vụ & thông tin khác</span>
-          <i class="bi bi-chevron-right"></i>
-        </a>
+        {{-- RIGHT: panel nội dung --}}
+        <div class="mega-right">
+          {{-- Laptop --}}
+          <div class="mega-panel show" id="panel-laptop">
+            <div class="row g-4">
+              <div class="col-md-3">
+                <div class="mega-heading">Thương hiệu</div>
+                <ul class="mega-links">
+                    <li><a href="{{ route('laptop.brand','asus') }}">ASUS</a></li>
+                    <li><a href="{{ route('laptop.brand','acer') }}">ACER</a></li>
+                    <li><a href="{{ route('laptop.brand','msi') }}">MSI</a></li>
+                    <li><a href="{{ route('laptop.brand','lenovo') }}">LENOVO</a></li>
+                    <li><a href="{{ route('laptop.brand','dell') }}">DELL</a></li>
+                    <li><a href="{{ route('laptop.brand','hp') }}">HP</a></li>
+                    <li><a href="{{ route('laptop.brand','lg') }}">LG</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Giá bán</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=laptop&price=lt-15000000">Dưới 15 triệu</a></li>
+                  <li><a href="/products?category=laptop&price=15-20">Từ 15 đến 20 triệu</a></li>
+                  <li><a href="/products?category=laptop&price=gt-20">Trên 20 triệu</a></li>
+                </ul>
 
-      </div>
+                <div class="mega-heading mt-4">CPU Intel - AMD</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=laptop&cpu=intel-i3">Intel Core i3</a></li>
+                  <li><a href="/products?category=laptop&cpu=intel-i5">Intel Core i5</a></li>
+                  <li><a href="/products?category=laptop&cpu=intel-i7">Intel Core i7</a></li>
+                  <li><a href="/products?category=laptop&cpu=amd-ryzen">AMD Ryzen</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Nhu cầu sử dụng</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=laptop&use=design">Đồ hoạ - Studio</a></li>
+                  <li><a href="/products?category=laptop&use=student">Học sinh - Sinh viên</a></li>
+                  <li><a href="/products?category=laptop&use=thinlight">Mỏng nhẹ cao cấp</a></li>
+                </ul>
+
+                <div class="mega-heading mt-4">Linh phụ kiện Laptop</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=ram-laptop">Ram laptop</a></li>
+                  <li><a href="/products?category=ssd-laptop">SSD laptop</a></li>
+                  <li><a href="/products?category=hdd-external">Ổ cứng di động</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Laptop ASUS</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=laptop-asus&series=vivobook">Vivobook Series</a></li>
+                  <li><a href="/products?category=laptop-asus&series=zenbook">Zenbook Series</a></li>
+                  <li><a href="/products?category=laptop-asus&series=tuf">TUF Gaming</a></li>
+                </ul>
+
+                <div class="mega-heading mt-4">Laptop ACER</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=laptop-acer&series=aspire">Aspire Series</a></li>
+                  <li><a href="/products?category=laptop-acer&series=swift">Swift Series</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {{-- Màn hình --}}
+          <div class="mega-panel" id="panel-monitor">
+            <div class="row g-4">
+              <div class="col-md-3">
+                <div class="mega-heading">Thương hiệu</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=monitor&brand=asus">ASUS</a></li>
+                  <li><a href="/products?category=monitor&brand=lg">LG</a></li>
+                  <li><a href="/products?category=monitor&brand=samsung">Samsung</a></li>
+                  <li><a href="/products?category=monitor&brand=aoc">AOC</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Kích thước</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=monitor&size=24">23–24"</a></li>
+                  <li><a href="/products?category=monitor&size=27">27"</a></li>
+                  <li><a href="/products?category=monitor&size=32">32"+</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Tần số quét</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=monitor&hz=60-75">60–75Hz</a></li>
+                  <li><a href="/products?category=monitor&hz=120-165">120–165Hz</a></li>
+                  <li><a href="/products?category=monitor&hz=240">240Hz+</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Độ phân giải</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=monitor&res=1080p">Full HD</a></li>
+                  <li><a href="/products?category=monitor&res=1440p">2K QHD</a></li>
+                  <li><a href="/products?category=monitor&res=2160p">4K UHD</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {{-- Điện thoại --}}
+          <div class="mega-panel" id="panel-phone">
+            <div class="row g-4">
+              <div class="col-md-3">
+                <div class="mega-heading">Thương hiệu</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=phone&brand=apple">Apple</a></li>
+                  <li><a href="/products?category=phone&brand=samsung">Samsung</a></li>
+                  <li><a href="/products?category=phone&brand=xiaomi">Xiaomi</a></li>
+                  <li><a href="/products?category=phone&brand=oppo">OPPO</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Mức giá</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=phone&price=lt-5">Dưới 5 triệu</a></li>
+                  <li><a href="/products?category=phone&price=5-10">5–10 triệu</a></li>
+                  <li><a href="/products?category=phone&price=gt-10">Trên 10 triệu</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mega-heading">Bộ nhớ</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=phone&rom=64">64GB</a></li>
+                  <li><a href="/products?category=phone&rom=128">128GB</a></li>
+                  <li><a href="/products?category=phone&rom=256">256GB+</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {{-- Chuột + Lót chuột --}}
+          <div class="mega-panel" id="panel-mouse">
+            <div class="row g-4">
+              <div class="col-md-4">
+                <div class="mega-heading">Chuột</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=mouse&type=wireless">Không dây</a></li>
+                  <li><a href="/products?category=mouse&type=wired">Có dây</a></li>
+                  <li><a href="/products?category=mouse&dpi=high">DPI cao</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <div class="mega-heading">Lót chuột</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=mousepad&size=M">Size M</a></li>
+                  <li><a href="/products?category=mousepad&size=L">Size L</a></li>
+                  <li><a href="/products?category=mousepad&size=XL">Size XL</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <div class="mega-heading">Thương hiệu</div>
+                <ul class="mega-links">
+                  <li><a href="/products?brand=logitech&category=mouse">Logitech</a></li>
+                  <li><a href="/products?brand=razer&category=mouse">Razer</a></li>
+                  <li><a href="/products?brand=steelseries&category=mouse">SteelSeries</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {{-- Tai nghe --}}
+          <div class="mega-panel" id="panel-headset">
+            <div class="row g-4">
+              <div class="col-md-4">
+                <div class="mega-heading">Kết nối</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=headset&connect=3.5mm">3.5mm</a></li>
+                  <li><a href="/products?category=headset&connect=usb">USB</a></li>
+                  <li><a href="/products?category=headset&connect=bt">Bluetooth</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <div class="mega-heading">Kiểu đeo</div>
+                <ul class="mega-links">
+                  <li><a href="/products?category=headset&type=over-ear">Over-ear</a></li>
+                  <li><a href="/products?category=headset&type=in-ear">In-ear</a></li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <div class="mega-heading">Thương hiệu</div>
+                <ul class="mega-links">
+                  <li><a href="/products?brand=hyperx&category=headset">HyperX</a></li>
+                  <li><a href="/products?brand=steelseries&category=headset">SteelSeries</a></li>
+                  <li><a href="/products?brand=corsair&category=headset">Corsair</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div> {{-- /mega-right --}}
+      </div>    {{-- /mega-wrap --}}
     </div>
   </div>
 </div>
+
 
     {{-- Tìm kiếm lớn ở giữa --}}
     <form class="flex-grow-1 search-wrap" role="search" action="/products" method="get">
@@ -124,10 +282,20 @@
         @endif
       </a>
 
-      <a class="toplink" href="/login">
-        <i class="bi bi-person"></i>
-        <span class="label">Đăng<br>nhập</span>
-      </a>
+        @auth
+            <form action="{{ route('logout') }}" method="post" class="d-inline">
+                @csrf
+                <button class="toplink btn btn-link p-0 text-decoration-none">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="label">Đăng<br>xuất</span>
+                </button>
+            </form>
+        @else
+            <a class="toplink" href="{{ route('login') }}">
+                <i class="bi bi-person"></i>
+                <span class="label">Đăng<br>nhập</span>
+            </a>
+        @endauth
     </div>
 
     {{-- toggler cho mobile --}}
