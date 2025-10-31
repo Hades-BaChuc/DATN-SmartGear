@@ -1,22 +1,17 @@
-<div class="card h-100 shadow-sm">
-  <a href="{{ route('products.show', $p->id) }}" class="text-decoration-none text-dark">
-    <img class="card-img-top" src="{{ $p->cover_image ?? 'https://picsum.photos/600/400?random='.$p->id }}" alt="{{ $p->name }}">
-    <div class="card-body">
-      <div class="small text-muted mb-1">{{ $p->brand->name ?? '—' }}</div>
-      <h3 class="h6 card-title">{{ Str::limit($p->name, 60) }}</h3>
-      <div class="fw-semibold text-danger">
-        {{ number_format($p->price,0,',','.') }}₫
-        @if($p->discount_percent)
-          <small class="text-muted">-{{ $p->discount_percent }}%</small>
-        @endif
-      </div>
-    </div>
-  </a>
-  <div class="card-footer bg-white border-0">
-    <form method="POST" action="{{ route('cart.add') }}">
-      @csrf
-      <input type="hidden" name="product_id" value="{{ $p->id }}">
-      <button class="btn btn-sm btn-primary w-100">Thêm vào giỏ</button>
-    </form>
-  </div>
+@php($href = isset($p->slug) ? route('products.show',$p->slug) : '#')
+<div class="col-6 col-md-4 col-lg-3">
+    <a href="{{ $href }}" class="text-decoration-none text-dark">
+        <div class="card h-100 shadow-sm border-0 product-card">
+            <img src="{{ $p->thumbnail ?? 'https://picsum.photos/400/300' }}" class="card-img-top" alt="{{ $p->name ?? 'Sản phẩm' }}">
+            <div class="card-body">
+                <h6 class="card-title text-truncate mb-1">{{ $p->name ?? 'Sản phẩm' }}</h6>
+                <div class="d-flex align-items-baseline gap-2">
+                    <div class="price">{{ number_format(($p->sale_price ?? $p->price ?? 0),0,'.','.') }} ₫</div>
+                    @if(($p->sale_price ?? 0) && ($p->price ?? 0) > ($p->sale_price ?? 0))
+                        <small class="text-muted text-decoration-line-through">{{ number_format($p->price,0,'.','.') }} ₫</small>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </a>
 </div>

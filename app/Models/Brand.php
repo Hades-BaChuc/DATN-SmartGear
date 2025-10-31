@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;   // <-- đúng
+// use App\Models\HasMany;  <-- XÓA dòng sai này
+use App\Models\Product;
 
 class Brand extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'slug', 'logo_url'];
 
-    protected $fillable = ['name','slug','logo_url'];
-
-    public function products()
+    public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        // Giữ 1 return duy nhất
+        return $this->hasMany(Product::class, 'brand_id');
     }
 }

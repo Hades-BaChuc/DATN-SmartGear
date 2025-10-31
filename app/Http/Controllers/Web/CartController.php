@@ -5,67 +5,85 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    public function index()
+    public function store(Request $request)
     {
-        $cart = session('cart', []); // [id => qty]
-        $ids  = array_keys($cart);
+        // Fetch the product by its ID
+        $product = Product::find($request->id);
 
-        $items = [];
-        if ($ids) {
-            $products = Product::whereIn('id', $ids)->get()->keyBy('id');
-            foreach ($cart as $id => $qty) {
-                if (!isset($products[$id])) continue;
-                $p = $products[$id];
-                $items[] = [
-                    'id'    => $p->id,
-                    'name'  => $p->name,
-                    'img'   => $p->image ?? '/images/placeholder.jpg',
-                    'price' => (int) $p->price,
-                    'qty'   => (int) $qty,
-                    'attrs' => $p->tags ?? '',
-                ];
-            }
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found!');
         }
 
-        return view('cart.index', compact('items'));
+        // Get the current cart from the session
+        $cart = session()->get('cart', []);
+
+        // Add the product to the cart
+        $cart[$product->id] = [
+            "name" => $product->product_name,
+            "quantity" => 1,
+            "price" => $product->price,
+            "image" => $product->cover_url,
+        ];
+
+        // Save the updated cart to the session
+        session()->put('cart', $cart);
+
+        // Redirect the user to the cart page
+        return redirect()->route('cart.index');
     }
 
-    public function add(Request $request)
+    public function index()
     {
-        $data = $request->validate([
-            'id'  => 'required|integer|exists:products,id',
-            'qty' => 'nullable|integer|min:1|max:99',
-        ]);
-        $qty = $data['qty'] ?? 1;
+        $cart = session()->get('cart', []);
+        
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
 
-        $cart = session('cart', []);
-        $cart[$data['id']] = ($cart[$data['id']] ?? 0) + $qty;
-
-        session([
-            'cart'       => $cart,
-            'cart_count' => array_sum($cart), // dùng cho badge ở navbar
-        ]);
-
-        return back()->with('success', 'Đã thêm vào giỏ.');
+        return view('cart.index', compact('cart', 'total'));
     }
 
-    public function remove(int $id)
+    public function buyNow(Request $request)
     {
-        $cart = session('cart', []);
-        unset($cart[$id]);
-        session([
-            'cart'       => $cart,
-            'cart_count' => array_sum($cart),
-        ]);
-        return back()->with('success', 'Đã xoá sản phẩm khỏi giỏ.');
+        $product = Product::find($request->id);
+
+        if ($product) {
+            // Lưu sản phẩm vào giỏ hàng
+            session()->put('cart', [
+                $product->id => [
+                    "name" => $product->product_name,
+                    "quantity" => 1,
+                    "price" => $product->price,
+                    "image" => $product->cover_url
+                ]
+            ]);
+
+            // Tiến hành thẳng đến checkout
+            return redirect()->route('checkout.index');  // Đảm bảo không quay lại cart nữa
+        }
+
+        return back()->with('error', 'Product not found');
     }
 
-    public function clear()
+    public function updateQuantity(Request $request, $id)
     {
-        session()->forget(['cart','cart_count']);
-        return back()->with('success', 'Đã làm trống giỏ hàng.');
+        $cart = session()->get('cart', []);
+
+        // Check if the product exists in the cart
+        if (isset($cart[$id])) {
+            // Update the quantity
+            $cart[$id]['quantity'] = $request->quantity;
+            session()->put('cart', $cart);
+        }
+
+        return redirect()->route('cart.index');
     }
+
 }
+
+

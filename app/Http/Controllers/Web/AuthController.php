@@ -3,56 +3,47 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin()    { return view('auth.login'); }
-    public function showRegister() { return view('auth.register'); }
+    public function showLoginForm(){ return view('auth.login'); }
+    public function showRegisterForm(){ return view('auth.register'); }
 
-    public function login(Request $r)
-    {
-        $data = $r->validate([
-            'email' => ['required','email'],
-            'password' => ['required','string','min:6'],
-            'remember' => ['nullable','boolean'],
-        ]);
-
-        if (Auth::attempt(['email'=>$data['email'],'password'=>$data['password']], (bool)($data['remember'] ?? false))) {
-            $r->session()->regenerate();
-            return redirect()->intended(route('home'))->with('success','Đăng nhập thành công!');
-        }
-
-        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
+    public function login(Request $r){
+        $cred = $r->validate(['email'=>'required|email','password'=>'required']);
+        if (Auth::attempt($cred, true)) { $r->session()->regenerate(); return redirect()->intended('/'); }
+        return back()->withErrors(['email'=>'Thông tin đăng nhập không đúng.']);
     }
 
-    public function register(Request $r)
-    {
+    public function register(Request $r){
         $data = $r->validate([
-            'name' => ['required','string','max:100'],
-            'email' => ['required','email','max:150','unique:users,email'],
-            'password' => ['required','string','min:6','confirmed'],
+            'name'=>'required|string|max:255',
+            'phone'=>'nullable|string|max:30',
+            'email'=>'required|email|unique:users,email',
+            'address'=>'required|string|max:255',
+            'password'=>'required|confirmed|min:6',
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'password'=>Hash::make($data['password']),
+        ]);
+
+        // tạo địa chỉ mặc định
+        Address::create([
+            'user_id' => $user->id,
+            'line1'   => $data['address'], // <<< nếu cột tên "address" hãy đổi 'line1' -> 'address'
+            'is_default' => true,
+            'name' => $data['name'] ?? null,
+            'phone' => $data['phone'] ?? null,
         ]);
 
         Auth::login($user);
-        $r->session()->regenerate();
-
-        return redirect()->intended(route('home'))->with('success','Tạo tài khoản thành công!');
-    }
-
-    public function logout(Request $r)
-    {
-        Auth::logout();
-        $r->session()->invalidate();
-        $r->session()->regenerateToken();
-        return redirect()->route('home')->with('success','Đã đăng xuất.');
+        return redirect()->route('home');
     }
 }

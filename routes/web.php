@@ -1,42 +1,40 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\ProductController;
-use App\Http\Controllers\Web\HomeController;
-use App\Http\Controllers\Web\CartController;
-use App\Http\Controllers\Web\LaptopController;
-use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\{
+HomeController,
+CategoryController,
+ProductController,
+CartController,
+CheckoutController,
+OrderController,
+ProfileController
+};
 
-// Home
+// Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Products
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])
-    ->whereNumber('id') // tránh đụng các path khác
-    ->name('products.show');
-Route::redirect('/product', '/products'); // alias cũ nếu có
-
-// Cart (session-based)
-Route::prefix('cart')->name('cart.')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('index');
-    Route::post('/add', [CartController::class, 'add'])->name('add');
-    Route::post('/remove/{id}', [CartController::class, 'remove'])->whereNumber('id')->name('remove');
-    Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+// Sản phẩm (danh sách + chi tiết)
+Route::prefix('products')->name('products.')->group(function () {
+Route::get('/', [ProductController::class, 'index'])->name('index');
+Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
 });
 
-Route::prefix('laptop')->name('laptop.')->group(function () {
-    Route::get('/', [LaptopController::class, 'index'])->name('index');            // /laptop
-    Route::get('/{brand:slug}', [LaptopController::class, 'brand'])->name('brand'); // /laptop/asus
+// Giỏ hàng
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::post('/cart/buy-now', [CartController::class, 'buyNow'])->name('cart.buyNow');
+Route::patch('/cart/{item}', [CartController::class, 'update'])->name('cart.update');
+Route::patch('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+Route::delete('/cart/{item}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+
+// Khu vực cần đăng nhập
+Route::middleware('auth')->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{code}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login',   [AuthController::class, 'login'])->name('login.post');
-
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register',[AuthController::class, 'register'])->name('register.post');
-});
-
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware('auth')->name('logout');
+// NẠP ROUTE AUTH CỦA BREEZE (đăng nhập/đăng ký/đổi mật khẩu, v.v.)
+require __DIR__.'/auth.php';
